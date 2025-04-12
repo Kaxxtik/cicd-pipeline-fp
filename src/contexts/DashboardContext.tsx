@@ -9,6 +9,8 @@ interface DashboardContextType {
   setRefreshRate: React.Dispatch<React.SetStateAction<number>>;
   containerUpdateRate: number;
   setContainerUpdateRate: React.Dispatch<React.SetStateAction<number>>;
+  infraUpdateRate: number;
+  setInfraUpdateRate: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export const DashboardContext = createContext<DashboardContextType | undefined>(undefined);
@@ -23,8 +25,9 @@ export function useDashboardContext() {
 
 export function DashboardProvider({ children }: { children: React.ReactNode }) {
   const [data, setData] = useState(generateMockData());
-  const [refreshRate, setRefreshRate] = useState(30); // seconds
+  const [refreshRate, setRefreshRate] = useState(30); // seconds for global data refresh
   const [containerUpdateRate, setContainerUpdateRate] = useState(3); // seconds for container-specific updates
+  const [infraUpdateRate, setInfraUpdateRate] = useState(5); // seconds for infrastructure-specific updates
   
   return (
     <DashboardContext.Provider value={{ 
@@ -33,7 +36,9 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
       refreshRate, 
       setRefreshRate,
       containerUpdateRate,
-      setContainerUpdateRate
+      setContainerUpdateRate,
+      infraUpdateRate,
+      setInfraUpdateRate
     }}>
       {children}
     </DashboardContext.Provider>
