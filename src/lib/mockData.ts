@@ -1,4 +1,3 @@
-
 export interface MockData {
   pipelines: PipelineData[];
   containers: ContainerData[];
@@ -39,6 +38,10 @@ export interface ContainerData {
   memory: number;
   uptime: string;
   restarts: number;
+  ports?: {host: string, container: string, protocol: string}[];
+  volumes?: {host: string, container: string}[];
+  networks?: string[];
+  environment?: string[];
 }
 
 export interface ServerData {
@@ -76,7 +79,6 @@ export interface AlertData {
   acknowledged: boolean;
 }
 
-// Helper functions to generate random data with some relation to previous data
 const randomBetween = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1) + min);
 const chance = (percentage: number) => Math.random() < percentage / 100;
 
@@ -86,9 +88,7 @@ const randomWalk = (previous: number, min: number, max: number, maxChange: numbe
 };
 
 export function generateMockData(previous?: MockData): MockData {
-  // If we have previous data, modify it slightly for realistic changes
   if (previous) {
-    // Update metrics with "walking" changes
     const newCpuValue = randomWalk(previous.metrics.cpu.current, 0, 100, 5);
     const newMemValue = randomWalk(previous.metrics.memory.current, 0, 100, 3);
     const newDiskValue = randomWalk(previous.metrics.disk.current, 0, 100, 1);
@@ -124,7 +124,6 @@ export function generateMockData(previous?: MockData): MockData {
       }
     };
     
-    // Occasionally change pipeline statuses
     if (chance(5)) {
       const pipelineToUpdate = randomBetween(0, updatedData.pipelines.length - 1);
       const newStatus = ['success', 'building', 'failed', 'unstable'][randomBetween(0, 3)] as 'success' | 'building' | 'failed' | 'unstable';
@@ -135,7 +134,6 @@ export function generateMockData(previous?: MockData): MockData {
         lastRun: new Date().toISOString()
       };
       
-      // Update stages accordingly
       updatedData.pipelines[pipelineToUpdate].stages = updatedData.pipelines[pipelineToUpdate].stages.map((stage, idx) => {
         let status: 'success' | 'building' | 'failed' | 'pending' | 'skipped' = 'pending';
         
@@ -169,7 +167,6 @@ export function generateMockData(previous?: MockData): MockData {
       });
     }
     
-    // Occasionally change container statuses
     if (chance(10)) {
       const containerToUpdate = randomBetween(0, updatedData.containers.length - 1);
       const newStatus = ['running', 'stopped', 'restarting', 'exited'][randomBetween(0, 3)] as 'running' | 'stopped' | 'restarting' | 'exited';
@@ -185,7 +182,6 @@ export function generateMockData(previous?: MockData): MockData {
       };
     }
     
-    // Update server metrics 
     updatedData.servers = updatedData.servers.map(server => {
       return {
         ...server,
@@ -201,7 +197,6 @@ export function generateMockData(previous?: MockData): MockData {
       };
     });
     
-    // Add a new log entry
     const logServices = ['nginx', 'api', 'database', 'auth-service', 'worker', 'cache', 'frontend'];
     const logLevels = ['info', 'warning', 'error', 'debug'];
     const randomService = logServices[randomBetween(0, logServices.length - 1)];
@@ -254,18 +249,16 @@ export function generateMockData(previous?: MockData): MockData {
       message: logMessage
     };
     
-    updatedData.logs = [newLog, ...updatedData.logs.slice(0, 99)]; // Keep only most recent 100 logs
+    updatedData.logs = [newLog, ...updatedData.logs.slice(0, 99)];
     
     return updatedData;
   }
   
-  // Initial data generation
   const initialCpuValue = randomBetween(20, 60);
   const initialMemValue = randomBetween(30, 70);
   const initialDiskValue = randomBetween(40, 80);
   const initialNetValue = randomBetween(1, 8);
   
-  // Generate history data with some patterns
   const generateHistory = (current: number, len: number, min: number, max: number, variation: number) => {
     let value = current;
     const history = [];
@@ -289,7 +282,7 @@ export function generateMockData(previous?: MockData): MockData {
         id: '1',
         name: 'Main Application Build',
         status: 'success',
-        lastRun: new Date(Date.now() - 1000 * 60 * 15).toISOString(), // 15 mins ago
+        lastRun: new Date(Date.now() - 1000 * 60 * 15).toISOString(),
         duration: '4m 52s',
         branch: 'main',
         stages: [
@@ -319,7 +312,7 @@ export function generateMockData(previous?: MockData): MockData {
         id: '3',
         name: 'Database Migration',
         status: 'failed',
-        lastRun: new Date(Date.now() - 1000 * 60 * 45).toISOString(), // 45 mins ago
+        lastRun: new Date(Date.now() - 1000 * 60 * 45).toISOString(),
         duration: '2m 12s',
         branch: 'feature/db-update',
         stages: [
@@ -334,7 +327,7 @@ export function generateMockData(previous?: MockData): MockData {
         id: '4',
         name: 'Frontend Release',
         status: 'unstable',
-        lastRun: new Date(Date.now() - 1000 * 60 * 120).toISOString(), // 2 hours ago
+        lastRun: new Date(Date.now() - 1000 * 60 * 120).toISOString(),
         duration: '6m 34s',
         branch: 'release/v2.1.0',
         stages: [
@@ -357,7 +350,17 @@ export function generateMockData(previous?: MockData): MockData {
         cpu: 12,
         memory: 23,
         uptime: '45d 12h',
-        restarts: 1
+        restarts: 1,
+        ports: [
+          { host: '80', container: '80', protocol: 'tcp' },
+          { host: '443', container: '443', protocol: 'tcp' }
+        ],
+        volumes: [
+          { host: '/etc/nginx/conf.d', container: '/etc/nginx/conf.d' },
+          { host: '/var/log/nginx', container: '/var/log/nginx' }
+        ],
+        networks: ['frontend', 'backend'],
+        environment: ['NGINX_HOST=example.com', 'NGINX_PORT=80']
       },
       {
         id: 'c2',
@@ -368,7 +371,15 @@ export function generateMockData(previous?: MockData): MockData {
         cpu: 35,
         memory: 48,
         uptime: '12d 5h',
-        restarts: 0
+        restarts: 0,
+        ports: [
+          { host: '8080', container: '8080', protocol: 'tcp' }
+        ],
+        volumes: [
+          { host: '/data/api', container: '/app/data' }
+        ],
+        networks: ['backend', 'database'],
+        environment: ['NODE_ENV=production', 'PORT=8080', 'DB_HOST=postgres-db']
       },
       {
         id: 'c3',
@@ -379,7 +390,15 @@ export function generateMockData(previous?: MockData): MockData {
         cpu: 8,
         memory: 15,
         uptime: '45d 12h',
-        restarts: 0
+        restarts: 0,
+        ports: [
+          { host: '6379', container: '6379', protocol: 'tcp' }
+        ],
+        volumes: [
+          { host: '/data/redis', container: '/data' }
+        ],
+        networks: ['backend', 'cache'],
+        environment: ['REDIS_PASSWORD=secret', 'REDIS_AOF=yes']
       },
       {
         id: 'c4',
@@ -390,7 +409,15 @@ export function generateMockData(previous?: MockData): MockData {
         cpu: 22,
         memory: 45,
         uptime: '45d 12h',
-        restarts: 0
+        restarts: 0,
+        ports: [
+          { host: '5432', container: '5432', protocol: 'tcp' }
+        ],
+        volumes: [
+          { host: '/data/postgres', container: '/var/lib/postgresql/data' }
+        ],
+        networks: ['database'],
+        environment: ['POSTGRES_USER=admin', 'POSTGRES_PASSWORD=secret', 'POSTGRES_DB=app']
       },
       {
         id: 'c5',
@@ -401,7 +428,13 @@ export function generateMockData(previous?: MockData): MockData {
         cpu: 0,
         memory: 5,
         uptime: '0s',
-        restarts: 3
+        restarts: 3,
+        ports: [
+          { host: '8081', container: '8081', protocol: 'tcp' }
+        ],
+        volumes: [],
+        networks: ['backend'],
+        environment: ['JWT_SECRET=supersecret', 'API_KEY=123456']
       },
       {
         id: 'c6',
@@ -412,7 +445,15 @@ export function generateMockData(previous?: MockData): MockData {
         cpu: 5,
         memory: 12,
         uptime: '7d 3h',
-        restarts: 0
+        restarts: 0,
+        ports: [
+          { host: '3000', container: '80', protocol: 'tcp' }
+        ],
+        volumes: [
+          { host: '/app/build', container: '/usr/share/nginx/html' }
+        ],
+        networks: ['frontend'],
+        environment: ['NODE_ENV=production']
       },
       {
         id: 'c7',
@@ -423,7 +464,16 @@ export function generateMockData(previous?: MockData): MockData {
         cpu: 87,
         memory: 92,
         uptime: '12h 40m',
-        restarts: 2
+        restarts: 2,
+        ports: [
+          { host: '9200', container: '9200', protocol: 'tcp' },
+          { host: '9300', container: '9300', protocol: 'tcp' }
+        ],
+        volumes: [
+          { host: '/data/elasticsearch', container: '/usr/share/elasticsearch/data' }
+        ],
+        networks: ['logging'],
+        environment: ['discovery.type=single-node', 'ES_JAVA_OPTS=-Xms512m -Xmx512m', 'xpack.security.enabled=false']
       },
       {
         id: 'c8',
@@ -434,7 +484,15 @@ export function generateMockData(previous?: MockData): MockData {
         cpu: 15,
         memory: 32,
         uptime: '45d 12h',
-        restarts: 0
+        restarts: 0,
+        ports: [
+          { host: '9090', container: '9090', protocol: 'tcp' }
+        ],
+        volumes: [
+          { host: '/etc/prometheus', container: '/etc/prometheus' }
+        ],
+        networks: ['monitoring'],
+        environment: ['SCRAPE_INTERVAL=15s']
       }
     ],
     servers: [
