@@ -37,4 +37,29 @@ export class DiskGenerator extends BaseGenerator {
     const roundedValue = Math.round(this.currentValue * 10) / 10;
     this.history = [...this.history.slice(-59), roundedValue];
   }
+  
+  // Simulate disk I/O pressure, affecting both CPU and disk usage
+  public simulateDiskIOPressure(intensity: number = 0.8, duration: number = 10000): void {
+    // Current value increases temporarily
+    const originalValue = this.currentValue;
+    const increase = this.max * 0.15 * intensity;
+    
+    this.currentValue = Math.min(this.max, this.currentValue + increase);
+    
+    // Add the spike to history
+    const roundedValue = Math.round(this.currentValue * 10) / 10;
+    this.history = [...this.history.slice(-59), roundedValue];
+    
+    // Return to normal gradually
+    setTimeout(() => {
+      this.currentValue = Math.min(this.max, originalValue + (this.diskGrowthRate * 5));
+    }, duration);
+  }
+  
+  // Simulate disk error event
+  public simulateDiskError(): boolean {
+    // Higher chance of error when disk is near capacity
+    const errorThreshold = this.currentValue > 90 ? 0.7 : this.currentValue > 80 ? 0.3 : 0.05;
+    return Math.random() < errorThreshold;
+  }
 }
