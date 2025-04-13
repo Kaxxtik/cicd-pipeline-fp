@@ -137,6 +137,14 @@ export function MetricsModule() {
     setOpenDropdown(null);
   };
   
+  // Helper function to safely format numeric values
+  const formatNumber = (value: any, decimalPlaces: number = 2): string => {
+    if (typeof value === 'number') {
+      return value.toFixed(decimalPlaces);
+    }
+    return String(value);
+  };
+  
   return (
     <Card className="card-glass">
       <CardHeader className="pb-2">
@@ -354,7 +362,7 @@ export function MetricsModule() {
                               <p className="text-sm font-medium mb-1">{label}</p>
                               {payload.map((entry, index) => (
                                 <p key={`item-${index}`} className="text-xs" style={{ color: entry.color }}>
-                                  {`${entry.name}: ${entry.value.toFixed(2)} ms`}
+                                  {`${entry.name}: ${formatNumber(entry.value)} ms`}
                                 </p>
                               ))}
                             </div>
@@ -391,7 +399,7 @@ export function MetricsModule() {
                     <div key={idx} className="flex justify-between py-1 border-b border-slate-800 last:border-0">
                       <span className="text-emerald-400">{metric}</span>
                       <span className="text-amber-300">
-                        {prometheusValues[metric]?.toFixed(2)}
+                        {formatNumber(prometheusValues[metric])}
                       </span>
                     </div>
                   ))}
@@ -404,7 +412,7 @@ export function MetricsModule() {
                 <div key={idx} className="bg-slate-800/30 border border-slate-800 rounded-md p-3">
                   <div className="text-xs font-mono mb-2 text-emerald-400 truncate">{metric}</div>
                   <div className="flex items-center gap-3">
-                    <div className="font-semibold text-lg">{value.toFixed(2)}</div>
+                    <div className="font-semibold text-lg">{formatNumber(value)}</div>
                     <Progress 
                       value={Math.min(100, (value / 1000) * 100)} 
                       className="h-2 flex-1"
@@ -486,7 +494,7 @@ export function MetricsModule() {
                             return (
                               <div className="bg-slate-900 px-3 py-2 border border-slate-700 rounded shadow-lg">
                                 <p className="text-xs font-medium">
-                                  {`Hour ${label}: ${payload[0].value.toFixed(2)} req/s`}
+                                  {`Hour ${label}: ${formatNumber(payload[0].value)} req/s`}
                                 </p>
                               </div>
                             );
@@ -532,7 +540,7 @@ export function MetricsModule() {
                             <div className="bg-slate-900 px-3 py-2 border border-slate-700 rounded shadow-lg">
                               {payload.map((entry, index) => (
                                 <p key={`item-${index}`} className="text-xs" style={{ color: entry.color }}>
-                                  {`${entry.name}: ${entry.value.toFixed(2)}`}
+                                  {`${entry.name}: ${formatNumber(entry.value)}`}
                                 </p>
                               ))}
                             </div>
