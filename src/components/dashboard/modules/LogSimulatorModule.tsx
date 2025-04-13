@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { useDashboardContext } from "@/contexts/DashboardContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,7 +20,8 @@ import {
   CheckCircle2,
   Server,
   Database,
-  Shield
+  Shield,
+  Search
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useInterval } from "@/hooks/useInterval";
