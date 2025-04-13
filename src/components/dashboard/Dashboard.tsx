@@ -16,16 +16,63 @@ import { useInterval } from "@/hooks/useInterval";
 import { useContext } from "react";
 
 function DashboardContent() {
-  const { data, setData, refreshRate } = useContext(DashboardContext);
+  const { 
+    data, 
+    setData, 
+    refreshRate, 
+    thresholds,
+    addAlert
+  } = useContext(DashboardContext);
+  
+  // Check metrics against thresholds and trigger alerts
+  const checkThresholds = (newData: typeof data) => {
+    const { metrics } = newData;
+    
+    // CPU threshold check
+    if (metrics.cpu.current >= thresholds.cpu.critical) {
+      addAlert(`Critical CPU usage: ${metrics.cpu.current}%`, 'error');
+    } else if (metrics.cpu.current >= thresholds.cpu.warning) {
+      addAlert(`High CPU usage: ${metrics.cpu.current}%`, 'warning');
+    }
+    
+    // Memory threshold check
+    if (metrics.memory.current >= thresholds.memory.critical) {
+      addAlert(`Critical memory usage: ${metrics.memory.current}%`, 'error');
+    } else if (metrics.memory.current >= thresholds.memory.warning) {
+      addAlert(`High memory usage: ${metrics.memory.current}%`, 'warning');
+    }
+    
+    // Disk threshold check
+    if (metrics.disk.current >= thresholds.disk.critical) {
+      addAlert(`Critical disk usage: ${metrics.disk.current}%`, 'error');
+    } else if (metrics.disk.current >= thresholds.disk.warning) {
+      addAlert(`High disk usage: ${metrics.disk.current}%`, 'warning');
+    }
+    
+    // Network threshold check
+    if (metrics.network.current >= thresholds.network.critical) {
+      addAlert(`Critical network I/O: ${metrics.network.current} MB/s`, 'error');
+    } else if (metrics.network.current >= thresholds.network.warning) {
+      addAlert(`High network I/O: ${metrics.network.current} MB/s`, 'warning');
+    }
+  };
   
   // Update dashboard data every refreshRate seconds
   useInterval(() => {
     const newData = generateMockData(data);
     setData(newData);
     
+    // Check metrics against thresholds
+    checkThresholds(newData);
+    
     // Generate random alerts occasionally
-    if (Math.random() < 0.2) {
-      const alertTypes = ["Container restart detected", "High CPU usage", "Pipeline failure", "Disk space warning"];
+    if (Math.random() < 0.1) {
+      const alertTypes = [
+        "Container restart detected", 
+        "Pipeline failure", 
+        "Database connection issue", 
+        "API endpoint timeout"
+      ];
       const randomAlert = alertTypes[Math.floor(Math.random() * alertTypes.length)];
       const severity = Math.random() < 0.3 ? "error" : "warning";
       
@@ -34,19 +81,7 @@ function DashboardContent() {
       });
       
       // Add to alerts list
-      const newAlerts = [...data.alerts];
-      newAlerts.unshift({
-        id: Date.now().toString(),
-        message: randomAlert,
-        type: severity,
-        timestamp: new Date().toISOString(),
-        acknowledged: false
-      });
-      
-      setData(prev => ({
-        ...prev,
-        alerts: newAlerts.slice(0, 100) // Limit to 100 alerts
-      }));
+      addAlert(randomAlert, severity);
     }
   }, refreshRate * 1000);
   
