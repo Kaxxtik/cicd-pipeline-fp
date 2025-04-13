@@ -6,6 +6,7 @@ import { InfrastructureModule } from "./modules/InfrastructureModule";
 import { MetricsModule } from "./modules/MetricsModule";
 import { LogsModule } from "./modules/LogsModule";
 import { AlertsModule } from "./modules/AlertsModule";
+import { LogSimulatorModule } from "./modules/LogSimulatorModule";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DashboardLayout } from "./DashboardLayout";
 import { DashboardContext, DashboardProvider } from "@/contexts/DashboardContext";
@@ -158,6 +159,9 @@ function DashboardContent() {
         </div>
         <div id="logs">
           <LogsModule />
+        </div>
+        <div id="logsimulator">
+          <LogSimulatorModule />
         </div>
         <div id="alerts">
           <AlertsModule />
