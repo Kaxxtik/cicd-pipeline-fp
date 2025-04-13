@@ -51,36 +51,6 @@
     --sidebar-width-collapsed: 64px;
     --header-height: 60px;
   }
-
-  .light {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-  }
 }
 
 @layer base {
@@ -93,19 +63,12 @@
   }
 
   .card-gradient {
-    @apply bg-gradient-to-br from-slate-700 to-slate-900 dark:from-slate-700 dark:to-slate-900 
-           light:from-slate-100 light:to-slate-200;
+    @apply bg-gradient-to-br from-slate-700 to-slate-900;
   }
   
   .card-glass {
-    @apply bg-slate-900/80 backdrop-blur-sm border-slate-700 
-           dark:bg-slate-900/80 dark:border-slate-700
-           light:bg-white/90 light:border-slate-200;
+    @apply bg-slate-900/80 backdrop-blur-sm border-slate-700;
   }
-}
-
-.light .card-glass {
-  @apply bg-white/90 border-slate-200;
 }
 
 #root {
@@ -113,33 +76,4 @@
   margin: 0;
   padding: 0;
   text-align: left;
-}
-
-/* Modify main layout for header */
-#root {
-  padding-top: 56px; /* Match header height */
-}
-
-/* Animations */
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
-.animate-pulse-custom {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-.fadeIn {
-  opacity: 0;
-  animation: fadeIn 0.3s ease-in forwards;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(5px); }
-  to { opacity: 1; transform: translateY(0); }
 }
