@@ -90,6 +90,29 @@ export const DEFAULT_THRESHOLDS: SystemThresholds = {
   },
 };
 
+// Incident types for the incident management system
+export interface Incident {
+  id: string;
+  title: string;
+  description: string;
+  status: "open" | "investigating" | "resolved" | "closed";
+  severity: "low" | "medium" | "high" | "critical";
+  createdAt: Date;
+  updatedAt: Date;
+  assignedTo?: string;
+  relatedMetrics?: ("cpu" | "memory" | "disk" | "network")[];
+  events: IncidentEvent[];
+}
+
+export interface IncidentEvent {
+  id: string;
+  incidentId: string;
+  type: "creation" | "update" | "comment" | "status-change" | "resolution";
+  content: string;
+  timestamp: Date;
+  user?: string;
+}
+
 // Default correlations between metrics
 export const DEFAULT_CORRELATIONS: DataCorrelation[] = [
   {
