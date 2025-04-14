@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -21,6 +20,7 @@ import { TimelineVisualization, Incident, IncidentEvent } from '@/components/inc
 import { useDashboardContext } from '@/contexts/DashboardContext';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { DashboardProvider } from '@/contexts/DashboardContext';
 
 // Sample incident data for the demo
 const sampleIncidents: Incident[] = [
@@ -134,7 +134,7 @@ const sampleIncidents: Incident[] = [
   }
 ];
 
-function IncidentMgmt() {
+function IncidentMgmtContent() {
   const [incidents, setIncidents] = useState<Incident[]>(sampleIncidents);
   const [selectedIncident, setSelectedIncident] = useState<Incident | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -543,6 +543,14 @@ function IncidentMgmt() {
         </Dialog>
       )}
     </div>
+  );
+}
+
+function IncidentMgmt() {
+  return (
+    <DashboardProvider>
+      <IncidentMgmtContent />
+    </DashboardProvider>
   );
 }
 
