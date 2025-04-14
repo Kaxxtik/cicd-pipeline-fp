@@ -70,6 +70,38 @@ export interface SystemThresholds {
   };
 }
 
+// Extended AlertData interface for incident management
+export interface ExtendedAlertData extends AlertData {
+  source?: string;
+}
+
+// Incident management types
+export type IncidentStatus = 'open' | 'investigating' | 'resolved' | 'closed';
+export type IncidentSeverity = 'low' | 'medium' | 'high' | 'critical';
+export type IncidentEventType = 'creation' | 'update' | 'comment' | 'status-change' | 'resolution';
+
+export interface IncidentEvent {
+  id: string;
+  incidentId: string;
+  type: IncidentEventType;
+  content: string;
+  timestamp: Date;
+  user: string;
+}
+
+export interface Incident {
+  id: string;
+  title: string;
+  description: string;
+  status: IncidentStatus;
+  severity: IncidentSeverity;
+  createdAt: Date;
+  updatedAt: Date;
+  resolvedAt?: Date;
+  assignedTo?: string;
+  events: IncidentEvent[];
+}
+
 // Default threshold values
 export const DEFAULT_THRESHOLDS: SystemThresholds = {
   cpu: {
