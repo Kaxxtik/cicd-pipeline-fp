@@ -38,8 +38,8 @@ export function AlertsModule() {
   }
 
   return (
-    <Card className="card-glass">
-      <CardHeader className="pb-2">
+    <Card className="card-glass h-[400px] flex flex-col">
+      <CardHeader className="pb-2 flex-shrink-0">
         <CardTitle className="text-lg flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Bell size={18} />
@@ -50,9 +50,9 @@ export function AlertsModule() {
           </div>
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex-1 overflow-hidden">
         {data.alerts.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-8 text-center">
+          <div className="flex flex-col items-center justify-center h-full text-center">
             <BellOff size={48} className="text-slate-500 mb-4" />
             <h3 className="text-lg font-medium">No alerts</h3>
             <p className="text-sm text-muted-foreground">

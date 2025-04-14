@@ -61,7 +61,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const { theme, toggleTheme } = useTheme();
   const { logout } = useAuth();
   const navigate = useNavigate();
-  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
   
   useEffect(() => {
     const handleResize = () => {
@@ -93,7 +93,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       e.preventDefault();
       
       if (item.href === '#settings') {
-        setSettingsOpen(true);
+        setSettingsDialogOpen(true);
         return;
       }
       
@@ -232,8 +232,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             </Button>
             
             <ExportDialog />
-            {/* Remove the open prop and add onClick to handle opening the dialog */}
-            <SettingsDialog />
+            
+            <SettingsDialog 
+              open={settingsDialogOpen}
+              onOpenChange={setSettingsDialogOpen}
+            />
+            
             <UserMenu />
           </div>
         </header>

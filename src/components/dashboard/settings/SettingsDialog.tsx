@@ -11,9 +11,14 @@ import {
 import { SettingsPanel } from './SettingsPanel';
 import { Settings } from 'lucide-react';
 
-export function SettingsDialog() {
+interface SettingsDialogProps {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         <Button variant="outline" size="icon">
           <Settings className="h-[1.2rem] w-[1.2rem]" />
