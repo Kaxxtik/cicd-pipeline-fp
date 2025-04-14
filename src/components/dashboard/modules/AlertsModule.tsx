@@ -7,9 +7,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 export function AlertsModule() {
   const { data } = useDashboardContext();
 
-  function getAlertIcon(severity: string) {
-    switch (severity.toLowerCase()) {
-      case 'critical':
+  function getAlertIcon(type: string) {
+    switch (type.toLowerCase()) {
+      case 'error':
         return <XCircle className="text-red-500" size={18} />;
       case 'warning':
         return <AlertTriangle className="text-amber-500" size={18} />;
@@ -22,9 +22,9 @@ export function AlertsModule() {
     }
   }
 
-  function getAlertClass(severity: string) {
-    switch (severity.toLowerCase()) {
-      case 'critical':
+  function getAlertClass(type: string) {
+    switch (type.toLowerCase()) {
+      case 'error':
         return 'bg-red-500/10 border-red-500/20';
       case 'warning':
         return 'bg-amber-500/10 border-amber-500/20';
@@ -46,7 +46,7 @@ export function AlertsModule() {
             <span>Active Alerts</span>
           </div>
           <div className="text-xs text-muted-foreground">
-            {data.alerts.filter(a => a.severity !== 'Resolved').length} unresolved alerts
+            {data.alerts.filter(a => a.type !== 'resolved').length} unresolved alerts
           </div>
         </CardTitle>
       </CardHeader>
@@ -65,22 +65,22 @@ export function AlertsModule() {
               {data.alerts.map((alert) => (
                 <div 
                   key={alert.id}
-                  className={`p-3 rounded-lg border ${getAlertClass(alert.severity)} animate-fade-in`}
+                  className={`p-3 rounded-lg border ${getAlertClass(alert.type)} animate-fade-in`}
                 >
                   <div className="flex items-start gap-3">
                     <div className="mt-0.5">
-                      {getAlertIcon(alert.severity)}
+                      {getAlertIcon(alert.type)}
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
-                        <h4 className="font-medium">{alert.title}</h4>
-                        <span className="text-xs text-muted-foreground">{alert.time}</span>
+                        <h4 className="font-medium">Alert</h4>
+                        <span className="text-xs text-muted-foreground">{alert.timestamp}</span>
                       </div>
-                      <p className="text-sm text-slate-400 mt-1">{alert.description}</p>
+                      <p className="text-sm text-slate-400 mt-1">{alert.message}</p>
                       
                       <div className="flex items-center justify-between mt-2">
                         <div className="flex items-center">
-                          <span className="text-xs text-slate-500">{alert.source}</span>
+                          <span className="text-xs text-slate-500">{alert.type}</span>
                         </div>
                         <button className="text-xs text-slate-400 flex items-center hover:text-slate-300">
                           Details

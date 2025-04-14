@@ -236,7 +236,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             </Button>
             
             <ExportDialog />
-            <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
+            <SettingsDialog onOpenChange={setSettingsOpen} />
             <UserMenu />
           </div>
         </header>

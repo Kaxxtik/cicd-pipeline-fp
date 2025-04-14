@@ -63,8 +63,8 @@ export function LogsModule() {
                   </span>
                 </div>
                 <div className="mt-1">{log.message}</div>
-                {log.source && (
-                  <div className="mt-1 text-[10px] opacity-70">Source: {log.source}</div>
+                {log.service && (
+                  <div className="mt-1 text-[10px] opacity-70">Source: {log.service}</div>
                 )}
               </div>
             ))}
