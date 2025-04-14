@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { 
@@ -231,7 +232,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             </Button>
             
             <ExportDialog />
-            <SettingsDialog open={settingsOpen} />
+            {/* Remove the open prop and add onClick to handle opening the dialog */}
+            <SettingsDialog />
             <UserMenu />
           </div>
         </header>
