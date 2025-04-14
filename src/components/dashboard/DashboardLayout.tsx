@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { 
@@ -74,7 +73,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     window.addEventListener('resize', handleResize);
     handleResize();
     
-    // Set active item based on current path
     const currentPath = window.location.pathname;
     setActiveItem(currentPath);
     
@@ -115,7 +113,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <div className={cn("flex h-screen overflow-hidden", theme === 'light' ? 'light-mode' : '')}>
-      {/* Mobile overlay */}
       {isMobile && sidebarOpen && (
         <div 
           className="fixed inset-0 bg-background/80 backdrop-blur-sm z-20"
@@ -123,7 +120,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         />
       )}
       
-      {/* Sidebar */}
       <aside 
         className={cn(
           "bg-slate-900 border-r border-slate-800 h-full z-30",
@@ -207,7 +203,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         </div>
       </aside>
       
-      {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="h-[var(--header-height)] border-b border-slate-800 flex items-center px-4 bg-slate-900">
           {isMobile && (
@@ -236,7 +231,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             </Button>
             
             <ExportDialog />
-            <SettingsDialog onOpenChange={setSettingsOpen} />
+            <SettingsDialog open={settingsOpen} />
             <UserMenu />
           </div>
         </header>

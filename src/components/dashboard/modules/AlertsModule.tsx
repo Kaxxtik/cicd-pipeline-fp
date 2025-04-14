@@ -46,7 +46,7 @@ export function AlertsModule() {
             <span>Active Alerts</span>
           </div>
           <div className="text-xs text-muted-foreground">
-            {data.alerts.filter(a => a.type !== 'resolved').length} unresolved alerts
+            {data.alerts.filter(a => a.type.toLowerCase() !== 'resolved').length} unresolved alerts
           </div>
         </CardTitle>
       </CardHeader>
