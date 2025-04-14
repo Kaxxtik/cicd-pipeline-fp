@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { 
   LayoutDashboard, 
   Activity, 
@@ -24,6 +24,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { SettingsDialog } from "./settings/SettingsDialog";
 import { ExportDialog } from "./export/ExportDialog";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
 
 type NavItem = {
   title: string;
@@ -34,7 +35,7 @@ type NavItem = {
 
 const mainNavItems: NavItem[] = [
   { title: "Dashboard", icon: LayoutDashboard, href: "/" },
-  { title: "Pipelines", icon: Activity, href: "#pipelines" },
+  { title: "Pipelines", icon: Activity, href: "/pipelines" },
   { title: "Containers", icon: Box, href: "#containers" },
   { title: "Infrastructure", icon: Server, href: "#infrastructure" },
   { title: "Metrics", icon: BarChart3, href: "#metrics" },
@@ -58,6 +59,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [isMobile, setIsMobile] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+  const [settingsOpen, setSettingsOpen] = useState(false);
   
   useEffect(() => {
     const handleResize = () => {
@@ -85,6 +89,30 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     }
   };
 
+  const handleNavigation = (item: NavItem, e: React.MouseEvent) => {
+    if (item.href.startsWith('#')) {
+      e.preventDefault();
+      
+      if (item.href === '#settings') {
+        setSettingsOpen(true);
+        return;
+      }
+      
+      if (item.href === '#logout') {
+        logout();
+        return;
+      }
+      
+      const element = document.querySelector(item.href);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+    
+    setActiveItem(item.href);
+    if (isMobile) setSidebarOpen(false);
+  };
+
   return (
     <div className={cn("flex h-screen overflow-hidden", theme === 'light' ? 'light-mode' : '')}>
       {/* Mobile overlay */}
@@ -109,7 +137,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <div className="bg-blue-500 h-6 w-6 rounded-md flex items-center justify-center">
               <Activity size={14} className="text-white" />
             </div>
-            {!collapsed && <div className="text-lg font-semibold">DevVista</div>}
+            {!collapsed && <div className="text-lg font-semibold">AutoDock</div>}
             <div className="ml-auto">
               <button 
                 onClick={toggleSidebar}
@@ -133,14 +161,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <Link
                 key={item.title}
                 to={item.href.startsWith('#') ? `/${item.href}` : item.href}
-                onClick={(e) => {
-                  if (item.href.startsWith('#')) {
-                    e.preventDefault();
-                    document.querySelector(item.href)?.scrollIntoView({ behavior: 'smooth' });
-                  }
-                  setActiveItem(item.href);
-                  if (isMobile) setSidebarOpen(false);
-                }}
+                onClick={(e) => handleNavigation(item, e)}
                 className={cn(
                   "flex items-center py-2 px-3 rounded-md text-sm transition-colors",
                   (activeItem === item.href || 
@@ -170,16 +191,17 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           
           <nav className="p-2 space-y-1 mb-4">
             {bottomNavItems.map((item) => (
-              <a
+              <Link
                 key={item.title}
-                href={item.href}
+                to={item.href.startsWith('#') ? `/${item.href}` : item.href}
+                onClick={(e) => handleNavigation(item, e)}
                 className="flex items-center py-2 px-3 rounded-md text-sm transition-colors text-slate-400 hover:bg-slate-800 hover:text-slate-200"
               >
                 <item.icon size={collapsed ? 20 : 18} className={collapsed ? "mx-auto" : "mr-3"} />
                 {!collapsed && (
                   <span>{item.title}</span>
                 )}
-              </a>
+              </Link>
             ))}
           </nav>
         </div>
@@ -214,7 +236,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             </Button>
             
             <ExportDialog />
-            <SettingsDialog />
+            <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
             <UserMenu />
           </div>
         </header>

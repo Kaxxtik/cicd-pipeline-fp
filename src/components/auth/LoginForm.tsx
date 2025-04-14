@@ -1,18 +1,17 @@
 
 import { useState } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import { Activity } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
-import { Loader2 } from 'lucide-react';
 
 export function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
-
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -20,63 +19,77 @@ export function LoginForm() {
     try {
       const success = await login(email, password);
       if (success) {
-        toast.success('Login successful', { 
-          description: 'Welcome to DevVista Dashboard'
-        });
+        toast.success('Logged in successfully');
+      } else {
+        toast.error('Invalid credentials');
       }
     } catch (error) {
-      toast.error('Login failed', {
-        description: 'Please check your credentials and try again'
-      });
+      toast.error('Something went wrong. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
-
+  
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader>
-        <CardTitle className="text-2xl text-center">Login to DevVista</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-slate-950 p-4">
+      <div className="w-full max-w-md space-y-8 bg-slate-900 p-8 rounded-xl border border-slate-800 shadow-xl">
+        <div className="flex flex-col items-center text-center">
+          <div className="bg-blue-600 p-3 rounded-xl shadow-lg mb-4">
+            <Activity className="h-8 w-8 text-white" />
+          </div>
+          <h1 className="text-3xl font-bold">AutoDock</h1>
+          <p className="text-slate-400 mt-2">DevOps Monitoring Dashboard</p>
+        </div>
+        
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <label htmlFor="email" className="text-sm font-medium">Email</label>
+            <label htmlFor="email" className="text-sm font-medium">
+              Email
+            </label>
             <Input
               id="email"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
+              onChange={e => setEmail(e.target.value)}
+              placeholder="Email address"
               required
+              className="bg-slate-800 border-slate-700"
             />
           </div>
+          
           <div className="space-y-2">
-            <label htmlFor="password" className="text-sm font-medium">Password</label>
+            <div className="flex items-center justify-between">
+              <label htmlFor="password" className="text-sm font-medium">
+                Password
+              </label>
+              <a href="#" className="text-xs text-blue-500 hover:text-blue-400">
+                Forgot password?
+              </a>
+            </div>
             <Input
               id="password"
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
+              onChange={e => setPassword(e.target.value)}
+              placeholder="Password"
               required
+              className="bg-slate-800 border-slate-700"
             />
           </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Logging in...
-              </>
-            ) : (
-              'Login'
-            )}
+          
+          <Button 
+            type="submit" 
+            className="w-full bg-blue-600 hover:bg-blue-700"
+            disabled={isLoading}
+          >
+            {isLoading ? "Signing In..." : "Sign In"}
           </Button>
         </form>
-      </CardContent>
-      <CardFooter className="flex justify-center text-sm text-muted-foreground">
-        <p>For demo purposes, any email and password will work</p>
-      </CardFooter>
-    </Card>
+        
+        <div className="text-center text-xs text-slate-500 mt-8">
+          <p>For demo purposes, you can sign in with any email and password.</p>
+        </div>
+      </div>
+    </div>
   );
 }

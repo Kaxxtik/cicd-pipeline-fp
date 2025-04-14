@@ -18,8 +18,8 @@ interface AuthContextType {
 
 const mockUser: User = {
   id: '1',
-  name: 'Admin User',
-  email: 'admin@example.com',
+  name: 'Kartik Mahajan',
+  email: 'Karymahajan6@gmail.com',
   role: 'admin',
   avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=admin'
 };
