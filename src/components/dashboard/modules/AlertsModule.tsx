@@ -50,9 +50,9 @@ export function AlertsModule() {
           </div>
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex-1 overflow-hidden">
+      <CardContent className="flex-1 overflow-hidden p-0">
         {data.alerts.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-center">
+          <div className="flex flex-col items-center justify-center h-full text-center p-6">
             <BellOff size={48} className="text-slate-500 mb-4" />
             <h3 className="text-lg font-medium">No alerts</h3>
             <p className="text-sm text-muted-foreground">
@@ -60,8 +60,8 @@ export function AlertsModule() {
             </p>
           </div>
         ) : (
-          <ScrollArea className="h-[300px] w-full">
-            <div className="space-y-3">
+          <ScrollArea className="h-[330px] w-full">
+            <div className="space-y-3 p-4">
               {data.alerts.map((alert) => (
                 <div 
                   key={alert.id}
