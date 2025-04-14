@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { 
   LayoutDashboard, 
   Activity, 
@@ -12,9 +13,17 @@ import {
   X,
   Settings,
   LogOut,
-  ChevronRight
+  ChevronRight,
+  AlertCircle,
+  Sun,
+  Moon
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { UserMenu } from "./UserMenu";
+import { useTheme } from "@/contexts/ThemeContext";
+import { SettingsDialog } from "./settings/SettingsDialog";
+import { ExportDialog } from "./export/ExportDialog";
+import { Button } from "@/components/ui/button";
 
 type NavItem = {
   title: string;
@@ -24,13 +33,14 @@ type NavItem = {
 };
 
 const mainNavItems: NavItem[] = [
-  { title: "Dashboard", icon: LayoutDashboard, href: "#dashboard" },
+  { title: "Dashboard", icon: LayoutDashboard, href: "/" },
   { title: "Pipelines", icon: Activity, href: "#pipelines" },
   { title: "Containers", icon: Box, href: "#containers" },
   { title: "Infrastructure", icon: Server, href: "#infrastructure" },
   { title: "Metrics", icon: BarChart3, href: "#metrics" },
   { title: "Logs", icon: FileText, href: "#logs" },
   { title: "Alerts", icon: Bell, href: "#alerts", badge: 3 },
+  { title: "Incidents", icon: AlertCircle, href: "/incidents" },
 ];
 
 const bottomNavItems: NavItem[] = [
@@ -44,9 +54,10 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [collapsed, setCollapsed] = useState(false);
-  const [activeItem, setActiveItem] = useState('#dashboard');
+  const [activeItem, setActiveItem] = useState('/');
   const [isMobile, setIsMobile] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
   
   useEffect(() => {
     const handleResize = () => {
@@ -58,6 +69,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     
     window.addEventListener('resize', handleResize);
     handleResize();
+    
+    // Set active item based on current path
+    const currentPath = window.location.pathname;
+    setActiveItem(currentPath);
     
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -71,7 +86,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className={cn("flex h-screen overflow-hidden", theme === 'light' ? 'light-mode' : '')}>
       {/* Mobile overlay */}
       {isMobile && sidebarOpen && (
         <div 
@@ -115,17 +130,22 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         <div className="flex flex-col justify-between h-[calc(100vh-var(--header-height))] overflow-y-auto">
           <nav className="p-2 space-y-1">
             {mainNavItems.map((item) => (
-              <a
+              <Link
                 key={item.title}
-                href={item.href}
+                to={item.href.startsWith('#') ? `/${item.href}` : item.href}
                 onClick={(e) => {
-                  e.preventDefault();
+                  if (item.href.startsWith('#')) {
+                    e.preventDefault();
+                    document.querySelector(item.href)?.scrollIntoView({ behavior: 'smooth' });
+                  }
                   setActiveItem(item.href);
                   if (isMobile) setSidebarOpen(false);
                 }}
                 className={cn(
                   "flex items-center py-2 px-3 rounded-md text-sm transition-colors",
-                  activeItem === item.href
+                  (activeItem === item.href || 
+                   (activeItem === '/' && item.href === '/') || 
+                   (item.href.startsWith('#') && window.location.hash === item.href))
                     ? "bg-blue-900/50 text-blue-300"
                     : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
                 )}
@@ -144,7 +164,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                     {item.badge}
                   </span>
                 )}
-              </a>
+              </Link>
             ))}
           </nav>
           
@@ -177,6 +197,26 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             </button>
           )}
           <div className="font-semibold">DevOps Monitoring Dashboard</div>
+          
+          <div className="ml-auto flex items-center space-x-2">
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={toggleTheme}
+              className="rounded-full h-8 w-8"
+            >
+              {theme === 'dark' ? (
+                <Sun className="h-[1.2rem] w-[1.2rem]" />
+              ) : (
+                <Moon className="h-[1.2rem] w-[1.2rem]" />
+              )}
+              <span className="sr-only">Toggle theme</span>
+            </Button>
+            
+            <ExportDialog />
+            <SettingsDialog />
+            <UserMenu />
+          </div>
         </header>
         <main className="flex-1 overflow-y-auto p-4 md:p-6">
           {children}
