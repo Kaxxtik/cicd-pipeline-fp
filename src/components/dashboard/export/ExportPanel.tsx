@@ -7,7 +7,7 @@ import { Switch } from '@/components/ui/switch';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { toast } from 'sonner';
 import { useDashboardContext } from '@/contexts/DashboardContext';
-import { FileDown, Calendar, Clock, Database, File, Table, BarChart } from 'lucide-react';
+import { FileDown, Calendar, Clock, Database, File, Table, BarChart, Bell } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { format } from 'date-fns';
