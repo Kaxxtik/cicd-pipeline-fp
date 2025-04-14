@@ -1,6 +1,7 @@
 
 import { AlertData } from "@/lib/mockData";
-import { ExtendedAlertData, ThresholdSettings } from "@/contexts/DashboardContext";
+import { ExtendedAlertData } from "@/lib/dataGeneration/types";
+import { ThresholdSettings } from "@/contexts/DashboardContext";
 
 export class AlertGenerator {
   private thresholds: ThresholdSettings;

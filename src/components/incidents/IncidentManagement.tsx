@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useDashboardContext } from "@/contexts/DashboardContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,7 +10,8 @@ import {
   Plus,
   Filter,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  CheckCheck
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -24,8 +24,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { IncidentStatus, IncidentSeverity, Incident, IncidentEvent, IncidentEventType } from '@/lib/dataGeneration/types';
-import { ExtendedAlertData } from '@/lib/dataGeneration/types';
+import { IncidentStatus, IncidentSeverity, Incident, IncidentEvent, IncidentEventType, ExtendedAlertData } from '@/lib/dataGeneration/types';
 
 export function IncidentManagement() {
   const { data } = useDashboardContext();
@@ -67,7 +66,7 @@ export function IncidentManagement() {
           {
             id: "ev-1",
             incidentId: "inc-1",
-            type: "creation" as IncidentEventType,
+            type: "creation",
             content: "Incident created",
             timestamp: new Date(Date.now() - 3600000),
             user: "user3",
@@ -75,7 +74,7 @@ export function IncidentManagement() {
           {
             id: "ev-2",
             incidentId: "inc-1",
-            type: "status-change" as IncidentEventType,
+            type: "status-change",
             content: "Status changed from 'open' to 'investigating'",
             timestamp: new Date(Date.now() - 3000000),
             user: "user1",
@@ -83,7 +82,7 @@ export function IncidentManagement() {
           {
             id: "ev-3",
             incidentId: "inc-1",
-            type: "comment" as IncidentEventType,
+            type: "comment",
             content: "Investigating database connection pool settings",
             timestamp: new Date(Date.now() - 1800000),
             user: "user1",
@@ -102,7 +101,7 @@ export function IncidentManagement() {
           {
             id: "ev-4",
             incidentId: "inc-2",
-            type: "creation" as IncidentEventType,
+            type: "creation",
             content: "Incident created",
             timestamp: new Date(Date.now() - 7200000),
             user: "user2",
@@ -126,7 +125,7 @@ export function IncidentManagement() {
           {
             id: "ev-5",
             incidentId: "inc-3",
-            type: "creation" as IncidentEventType,
+            type: "creation",
             content: "Incident created",
             timestamp: new Date(Date.now() - 86400000),
             user: "user3",
@@ -134,7 +133,7 @@ export function IncidentManagement() {
           {
             id: "ev-6",
             incidentId: "inc-3",
-            type: "status-change" as IncidentEventType,
+            type: "status-change",
             content: "Status changed from 'open' to 'investigating'",
             timestamp: new Date(Date.now() - 82800000),
             user: "user2",
@@ -142,7 +141,7 @@ export function IncidentManagement() {
           {
             id: "ev-7",
             incidentId: "inc-3",
-            type: "comment" as IncidentEventType,
+            type: "comment",
             content: "CDN provider has confirmed the issue on their status page",
             timestamp: new Date(Date.now() - 75600000),
             user: "user2",
@@ -150,7 +149,7 @@ export function IncidentManagement() {
           {
             id: "ev-8",
             incidentId: "inc-3",
-            type: "resolution" as IncidentEventType,
+            type: "resolution",
             content: "CDN provider has resolved the outage. Services back to normal.",
             timestamp: new Date(Date.now() - 43200000),
             user: "user2",
@@ -247,7 +246,7 @@ export function IncidentManagement() {
   };
 
   const handleUpdateStatus = (incident: Incident, newStatus: IncidentStatus) => {
-    const updatedIncident = {
+    const updatedIncident: Incident = {
       ...incident,
       status: newStatus,
       updatedAt: new Date(),
@@ -287,7 +286,7 @@ export function IncidentManagement() {
   const handleAddComment = () => {
     if (!selectedIncident || !newComment.trim()) return;
 
-    const updatedIncident = {
+    const updatedIncident: Incident = {
       ...selectedIncident,
       updatedAt: new Date(),
       events: [
@@ -324,7 +323,7 @@ export function IncidentManagement() {
   };
 
   const handleAssign = (incident: Incident, userId: string) => {
-    const updatedIncident = {
+    const updatedIncident: Incident = {
       ...incident,
       assignedTo: userId,
       updatedAt: new Date(),

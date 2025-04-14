@@ -3,6 +3,7 @@ import { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { MockData, generateMockData } from '@/lib/mockData';
 import { DataManager } from '@/lib/dataGeneration/DataManager';
 import { toast } from "sonner";
+import { ExtendedAlertData, SystemThresholds } from '@/lib/dataGeneration/types';
 
 export interface ThresholdSettings {
   cpu: {
@@ -22,6 +23,8 @@ export interface ThresholdSettings {
     critical: number;
   };
 }
+
+export type { ExtendedAlertData };
 
 interface DashboardContextType {
   data: MockData;
