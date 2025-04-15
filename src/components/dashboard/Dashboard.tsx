@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import { JenkinsPipelineModule } from "./modules/JenkinsPipelineModule";
 import { DockerContainersModule } from "./modules/DockerContainersModule";
@@ -32,6 +31,7 @@ import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 function DashboardContent() {
   const { 
@@ -343,29 +343,34 @@ function DashboardContent() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
-              {data.alerts.filter(alert => !alert.acknowledged).slice(0, 3).map(alert => (
-                <div 
-                  key={alert.id} 
-                  className={`px-3 py-2 rounded-md ${
-                    alert.type === 'error' 
-                      ? 'bg-red-950/30 border-l-2 border-red-500 animate-pulse' 
-                      : 'bg-amber-950/30 border-l-2 border-amber-500'
-                  }`}
-                >
-                  <div className="flex justify-between">
-                    <div className="font-medium text-sm">{alert.message}</div>
-                    <div className="text-xs opacity-70">
-                      {new Date(alert.timestamp).toLocaleTimeString()}
-                    </div>
-                  </div>
-                </div>
-              ))}
-              {data.alerts.filter(alert => !alert.acknowledged).length === 0 && (
+            <div className="space-y-2 h-[200px] relative">
+              {data.alerts.filter(alert => !alert.acknowledged).length === 0 ? (
                 <div className="text-center py-4 text-slate-400">
                   <ShieldAlert size={24} className="mx-auto mb-2 text-green-500 opacity-70" />
                   <div>No active alerts</div>
                 </div>
+              ) : (
+                <ScrollArea className="h-[160px] w-full pr-4">
+                  <div className="space-y-2">
+                    {data.alerts.filter(alert => !alert.acknowledged).slice(0, 10).map(alert => (
+                      <div 
+                        key={alert.id} 
+                        className={`px-3 py-2 rounded-md ${
+                          alert.type === 'error' 
+                            ? 'bg-red-950/30 border-l-2 border-red-500 animate-pulse' 
+                            : 'bg-amber-950/30 border-l-2 border-amber-500'
+                        }`}
+                      >
+                        <div className="flex justify-between">
+                          <div className="font-medium text-sm">{alert.message}</div>
+                          <div className="text-xs opacity-70">
+                            {new Date(alert.timestamp).toLocaleTimeString()}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </ScrollArea>
               )}
               {data.alerts.filter(alert => !alert.acknowledged).length > 0 && (
                 <Button
