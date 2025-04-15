@@ -50,7 +50,7 @@ export function AlertsModule() {
           </div>
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex-1 overflow-hidden p-0">
+      <CardContent className="p-0 flex-grow overflow-hidden">
         {data.alerts.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center p-6">
             <BellOff size={48} className="text-slate-500 mb-4" />
@@ -60,39 +60,41 @@ export function AlertsModule() {
             </p>
           </div>
         ) : (
-          <ScrollArea className="h-[330px] w-full">
-            <div className="space-y-3 p-4">
-              {data.alerts.map((alert) => (
-                <div 
-                  key={alert.id}
-                  className={`p-3 rounded-lg border ${getAlertClass(alert.type)} animate-fade-in`}
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="mt-0.5">
-                      {getAlertIcon(alert.type)}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between">
-                        <h4 className="font-medium">Alert</h4>
-                        <span className="text-xs text-muted-foreground">{alert.timestamp}</span>
+          <div className="h-full">
+            <ScrollArea className="h-[330px]">
+              <div className="space-y-3 p-4">
+                {data.alerts.map((alert) => (
+                  <div 
+                    key={alert.id}
+                    className={`p-3 rounded-lg border ${getAlertClass(alert.type)} animate-fade-in`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="mt-0.5">
+                        {getAlertIcon(alert.type)}
                       </div>
-                      <p className="text-sm text-slate-400 mt-1">{alert.message}</p>
-                      
-                      <div className="flex items-center justify-between mt-2">
-                        <div className="flex items-center">
-                          <span className="text-xs text-slate-500">{alert.type}</span>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <h4 className="font-medium">Alert</h4>
+                          <span className="text-xs text-muted-foreground">{alert.timestamp}</span>
                         </div>
-                        <button className="text-xs text-slate-400 flex items-center hover:text-slate-300">
-                          Details
-                          <ChevronRight size={12} className="ml-1" />
-                        </button>
+                        <p className="text-sm text-slate-400 mt-1">{alert.message}</p>
+                        
+                        <div className="flex items-center justify-between mt-2">
+                          <div className="flex items-center">
+                            <span className="text-xs text-slate-500">{alert.type}</span>
+                          </div>
+                          <button className="text-xs text-slate-400 flex items-center hover:text-slate-300">
+                            Details
+                            <ChevronRight size={12} className="ml-1" />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          </ScrollArea>
+                ))}
+              </div>
+            </ScrollArea>
+          </div>
         )}
       </CardContent>
     </Card>
