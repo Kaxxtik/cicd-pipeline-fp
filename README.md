@@ -68,3 +68,10 @@ Yes, you can connect your own domain to this project!
 To set it up, navigate to Project > Settings > Domains and click Connect Domain.
 
 For more details, check out the [custom domain setup guide](https://docs.myproject.com/tips-tricks/custom-domain#step-by-step-guide).
+
+![Screenshot 2025-05-08 194522](https://github.com/user-attachments/assets/d70f037b-355f-4423-8ebd-8f46145b690c)
+
+![1](https://github.com/user-attachments/assets/01322309-8287-4c63-a897-400301b945fb)
+
+![Screenshot 2025-05-08 194601](https://github.com/user-attachments/assets/1a52d795-1559-4c21-877c-971a022b0532)
+
